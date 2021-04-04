@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <OutputType>Library</OutputType>
+    <PackageId>UoMarsManagementTool</PackageId>
+    <Authors>Ale1991</Authors>
+    <Product>UoMarsManagementTool</Product>
+    <Copyright>Copyright © 2021</Copyright>
+    <AssemblyName>UoMarsManagementTool</AssemblyName>
+    <Company>UoMars</Company>
+  </PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<DebugType>portable</DebugType>
+		<OutputPath>..\UoFiddler\bin\$(Configuration)\plugins\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<DebugType>none</DebugType>
+		<OutputPath>..\UoFiddler\bin\Release\plugins</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ultima\Ultima.csproj" />
+    <ProjectReference Include="..\UoFiddler.Controls\UoFiddler.Controls.csproj" />
+    <ProjectReference Include="..\UoFiddler.Plugin.UopPacker\UoFiddler.Plugin.UopPacker.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+
+</Project>
