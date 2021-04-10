@@ -354,3 +354,6 @@ MigrationBackup/
 
 # Jetbrains Rider IDE
 .idea/
+
+# Debugging Folder
+TestFolder/
