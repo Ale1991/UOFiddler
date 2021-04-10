@@ -173,10 +173,10 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                         {
                             FileName = path,
                             // Arguments = "checkout AndroidManifest.xml",
-                            // UseShellExecute = false,
+                            UseShellExecute = true,
                             // RedirectStandardOutput = true,
                             // CreateNoWindow = false,
-                            // WorkingDirectory = @"C:\MyAndroidApp\"
+                            WorkingDirectory = pyFileHasherTextBox.Text
                         }
                     };
                     proc.Start();
@@ -247,6 +247,17 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
         #endregion
 
         #region File Packing/Moving Method
+        private bool areUpdated(string inFile, string outFile)
+        {
+            if (File.Exists(inFile) && File.Exists(outFile))
+            {
+                if (File.GetLastWriteTime(inFile) == File.GetLastWriteTime(outFile))
+                    return true;
+                else
+                    return false;
+            }
+            return false;
+        }
         private void MoveFileFromCentredToUoMarsClientFileFolder(string file, string fileName)
         {
             if (UoMarsClientFileFolderTextBox.Text?.Length != 0 && UoMarsClientFileFolderTextBox.Text != null
@@ -256,16 +267,33 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
 
                 if (File.Exists(destFilePath))
                 {
-                    if(eventTextBox != null)
-                        eventTextBox.Text += $"{fileName} found {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}! Deleting..." + Environment.NewLine;
 
-                    File.Delete(destFilePath);
+                    if(areUpdated(file, destFilePath))
+                    {
+                        if (eventTextBox != null)
+                            eventTextBox.Text += $"{fileName} found {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}! Deleting..." + Environment.NewLine;
+
+                        File.Delete(destFilePath);
+                        File.Copy(file, destFilePath);
+
+                        if (eventTextBox != null)
+                            eventTextBox.Text += $"{fileName} Copied in {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}" + Environment.NewLine;
+                    }
+                    else
+                    {
+                        if (eventTextBox != null)
+                            eventTextBox.Text += $"{fileName} exists and it's already updated in {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}" + Environment.NewLine;
+                    }
+
+                }
+                else
+                {
+                    File.Copy(file, destFilePath);
+
+                    if (eventTextBox != null)
+                        eventTextBox.Text += $"{fileName} not exists in {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}. Copied" + Environment.NewLine;
                 }
 
-                File.Copy(file, destFilePath);
-                
-                if (eventTextBox != null)
-                    eventTextBox.Text += $"{fileName} Copied in {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}" + Environment.NewLine;
             }
         }
         private void MoveFileFromCentredToServUoFileFolder(string file, string fileName)
@@ -313,6 +341,8 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
         {
             try
             {
+                bool convertFile = true;
+
                 ComputingTextBox.Text = inFile;
                 Refresh();
                 inFile = FixPath(inFile);
@@ -326,17 +356,44 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
 
                 if (File.Exists(outFile))
                 {
-                    eventTextBox.Text += $"{Path.GetFileName(outFile)} found in {new DirectoryInfo(Path.GetDirectoryName(outFile)).Name}! Deleting..." + Environment.NewLine;
-                    File.Delete(outFile);
+
+                    if(areUpdated(inFile, outFile))
+                    {
+                        if (eventTextBox != null)
+                            eventTextBox.Text += $"{Path.GetFileName(outFile)} exists and its uop is already updated" + Environment.NewLine;
+
+                        convertFile = false;
+                    }
+                    else
+                    {
+                        if (eventTextBox != null)
+                            eventTextBox.Text += $"{Path.GetFileName(outFile)} found in {new DirectoryInfo(Path.GetDirectoryName(outFile)).Name}! Deleting..." + Environment.NewLine;
+                        File.Delete(outFile);
+                    }
+
+                }
+                else
+                {
+                    if (eventTextBox != null)
+                        eventTextBox.Text += $"{Path.GetFileName(outFile)} not found. Creating..." + Environment.NewLine;
                 }
 
-                inIdx = FixPath(inIdx);
-                ++_total;
+                if(convertFile)
+                {
+                    inIdx = FixPath(inIdx);
+                    ++_total;
 
-                LegacyMulFileConverter.ToUOP(inFile, inIdx, outFile, type, typeIndex);
+                    LegacyMulFileConverter.ToUOP(inFile, inIdx, outFile, type, typeIndex);
 
-                eventTextBox.Text += $"{Path.GetFileName(outFile)} Created in {new DirectoryInfo(Path.GetDirectoryName(outFile)).Name}" + Environment.NewLine;
-                ++_success;
+                    eventTextBox.Text += $"{Path.GetFileName(outFile)} Created in {new DirectoryInfo(Path.GetDirectoryName(outFile)).Name}" + Environment.NewLine;
+
+                    // set same date of generator file
+                    File.SetLastWriteTime(outFile, File.GetLastWriteTime(inFile));
+
+                    ++_success;
+                }
+
+
             }
             catch (Exception e)
             {
