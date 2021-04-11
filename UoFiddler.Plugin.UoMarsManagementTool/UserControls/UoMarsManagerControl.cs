@@ -271,6 +271,11 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                     if(areUpdated(file, destFilePath))
                     {
                         if (eventTextBox != null)
+                            eventTextBox.Text += $"{fileName} exists and it's already updated in {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}" + Environment.NewLine;
+                    }
+                    else
+                    {
+                        if (eventTextBox != null)
                             eventTextBox.Text += $"{fileName} found {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}! Deleting..." + Environment.NewLine;
 
                         File.Delete(destFilePath);
@@ -278,11 +283,6 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
 
                         if (eventTextBox != null)
                             eventTextBox.Text += $"{fileName} Copied in {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}" + Environment.NewLine;
-                    }
-                    else
-                    {
-                        if (eventTextBox != null)
-                            eventTextBox.Text += $"{fileName} exists and it's already updated in {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}" + Environment.NewLine;
                     }
 
                 }
