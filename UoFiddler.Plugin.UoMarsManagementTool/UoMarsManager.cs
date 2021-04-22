@@ -1,4 +1,10 @@
-﻿using System;
+﻿// /***************************************************************************
+//  *
+//  * $Author: Hurricane
+//  *
+//  ***************************************************************************/
+
+using System;
 using System.Windows.Forms;
 using UoFiddler.Plugin.UopPacker;
 using UoFiddler.Controls.Plugin;
