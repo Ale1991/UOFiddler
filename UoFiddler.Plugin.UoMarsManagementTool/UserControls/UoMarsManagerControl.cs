@@ -77,18 +77,25 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                 ServUoFileFolderTextBox.Text = ServUoFileFolderBrowserDialog.SelectedPath;
             }
         }
-        private void CentredServerBtn_Click(object sender, EventArgs e)
+        private void CentredServerFeluccaBtn_Click(object sender, EventArgs e)
         {
-            if (CentredServerExeFolderBrowserDialog.ShowDialog() == DialogResult.OK)
+            if (CentredServerFeluccaExeFolderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                CentredServerTextBox.Text = CentredServerExeFolderBrowserDialog.SelectedPath;
+                CentredServerFeluccaTextBox.Text = CentredServerFeluccaExeFolderBrowserDialog.SelectedPath;
             }
         }
-        private void CentredServer2Btn_Click(object sender, EventArgs e)
+        private void CentredServerTrammelBtn_Click(object sender, EventArgs e)
         {
-            if (CentredServer2ExeFolderBrowserDialog.ShowDialog() == DialogResult.OK)
+            if (CentredServerTrammelExeFolderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                CentredServer2TextBox.Text = CentredServer2ExeFolderBrowserDialog.SelectedPath;
+                CentredServerTrammelTextBox.Text = CentredServerTrammelExeFolderBrowserDialog.SelectedPath;
+            }
+        }
+        private void CentredServerIlshenarBtn_Click(object sender, EventArgs e)
+        {
+            if (CentredServerIlshenarExeFolderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                CentredServerIlshenarTextBox.Text = CentredServerIlshenarExeFolderBrowserDialog.SelectedPath;
             }
         }
         private void pyFileHasherBtn_Click(object sender, EventArgs e)
@@ -125,10 +132,11 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
 
         private void OpenAllProcess()
         {
-            OpenServUOExe();
+            OpenServUOCompiler();
             OpenPyFileHasher();
-            OpenCentredServer();
-            OpenCentredServer2();
+            OpenCentredServerFelucca();
+            OpenCentredServerTrammel();
+            OpenCentredServerIlshenar();
         }
 
         private void OpenServUOExe()
@@ -160,6 +168,35 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                 eventTextBox.Text += $"ServUO.exe start failed: Directory not exists" + Environment.NewLine;
 
         }
+        private void OpenServUOCompiler()
+        {
+            if(ServUOExeTextBox.Text != null && Directory.Exists(ServUOExeTextBox.Text))
+            {
+                string path = Path.Combine(ServUOExeTextBox.Text, "Compile_Debug.bat");
+                if (File.Exists(path))
+                {
+                    var proc = new Process
+                    {
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = Path.Combine(ServUOExeTextBox.Text, "Compile_Debug.bat"),
+                            // Arguments = "checkout AndroidManifest.xml",
+                            // UseShellExecute = false,
+                            // RedirectStandardOutput = true,
+                            // CreateNoWindow = false,
+                            // WorkingDirectory = @"C:\MyAndroidApp\"
+                        }
+                    };
+                    proc.Start();
+                    eventTextBox.Text += $"Compile_Debug.bat started" + Environment.NewLine;
+                }
+                else
+                    eventTextBox.Text += $"Compile_Debug.bat start failed: File not exists" + Environment.NewLine;
+            }
+            else
+                eventTextBox.Text += $"Compile_Debug.bat start failed: Directory not exists" + Environment.NewLine;
+
+        }
         private void OpenPyFileHasher()
         {
             if (pyFileHasherTextBox.Text != null && Directory.Exists(pyFileHasherTextBox.Text))
@@ -188,11 +225,11 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             else
                 eventTextBox.Text += $"pyFileHasher.py start failed: Directory not exists" + Environment.NewLine;
         }
-        private void OpenCentredServer()
+        private void OpenCentredServerFelucca()
         {
-            if (CentredServerTextBox.Text != null && Directory.Exists(CentredServerTextBox.Text))
+            if (CentredServerFeluccaTextBox.Text != null && Directory.Exists(CentredServerFeluccaTextBox.Text))
             {
-                string path = Path.Combine(CentredServerTextBox.Text, "cedserver.exe");
+                string path = Path.Combine(CentredServerFeluccaTextBox.Text, "cedserver.exe");
                 if (File.Exists(path))
                 {
                     var proc = new Process
@@ -208,19 +245,19 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                         }
                     };
                     proc.Start();
-                    eventTextBox.Text += $"cedserver.exe 1 started" + Environment.NewLine;
+                    eventTextBox.Text += $"cedserver.exe Felucca started" + Environment.NewLine;
                 }
                 else
-                    eventTextBox.Text += $"cedserver.exe 1 start failed: File not exists" + Environment.NewLine;
+                    eventTextBox.Text += $"cedserver.exe Felucca start failed: File not exists" + Environment.NewLine;
             }
             else
-                eventTextBox.Text += $"cedserver.exe 1 start failed: Directory not exists" + Environment.NewLine;
+                eventTextBox.Text += $"cedserver.exe Felucca start failed: Directory not exists" + Environment.NewLine;
         }
-        private void OpenCentredServer2()
+        private void OpenCentredServerTrammel()
         {
-            if (CentredServer2TextBox.Text != null && Directory.Exists(CentredServer2TextBox.Text))
+            if (CentredServerTrammelTextBox.Text != null && Directory.Exists(CentredServerTrammelTextBox.Text))
             {
-                string path = Path.Combine(CentredServer2TextBox.Text, "cedserver.exe");
+                string path = Path.Combine(CentredServerTrammelTextBox.Text, "cedserver.exe");
                 if (File.Exists(path))
                 {
                     var proc = new Process
@@ -236,13 +273,41 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                         }
                     };
                     proc.Start();
-                    eventTextBox.Text += $"cedserver.exe 2 started" + Environment.NewLine;
+                    eventTextBox.Text += $"cedserver.exe Trammel started" + Environment.NewLine;
                 }
                 else
-                    eventTextBox.Text += $"cedserver.exe 2 start failed: File not exists" + Environment.NewLine;
+                    eventTextBox.Text += $"cedserver.exe Trammel start failed: File not exists" + Environment.NewLine;
             }
             else
-                eventTextBox.Text += $"cedserver.exe 2 start failed: Directory not exists" + Environment.NewLine;
+                eventTextBox.Text += $"cedserver.exe Trammel start failed: Directory not exists" + Environment.NewLine;
+        }
+        private void OpenCentredServerIlshenar()
+        {
+            if (CentredServerIlshenarTextBox.Text != null && Directory.Exists(CentredServerIlshenarTextBox.Text))
+            {
+                string path = Path.Combine(CentredServerIlshenarTextBox.Text, "cedserver.exe");
+                if (File.Exists(path))
+                {
+                    var proc = new Process
+                    {
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = path,
+                            // Arguments = "checkout AndroidManifest.xml",
+                            // UseShellExecute = false,
+                            // RedirectStandardOutput = true,
+                            // CreateNoWindow = false,
+                            // WorkingDirectory = @"C:\MyAndroidApp\"
+                        }
+                    };
+                    proc.Start();
+                    eventTextBox.Text += $"cedserver.exe Ilshenar started" + Environment.NewLine;
+                }
+                else
+                    eventTextBox.Text += $"cedserver.exe Ilshenar start failed: File not exists" + Environment.NewLine;
+            }
+            else
+                eventTextBox.Text += $"cedserver.exe Ilshenar start failed: Directory not exists" + Environment.NewLine;
         }
         #endregion
 
@@ -451,24 +516,34 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                 AddUpdateAppSettings("ServUoFileFolderTextBox.Text", ServUoFileFolderTextBox.Text);
             }
 
-            if (CentredServerTextBox.Text?.Length == 0 || CentredServerTextBox.Text == null)
+            if (CentredServerFeluccaTextBox.Text?.Length == 0 || CentredServerFeluccaTextBox.Text == null)
             {
                 MessageBox.Show("You must specify the CentredServer.exe Folder");
                 return false;
             }
             else
             {
-                AddUpdateAppSettings("CentredServerTextBox.Text", CentredServerTextBox.Text);
+                AddUpdateAppSettings("CentredServerFeluccaTextBox.Text", CentredServerFeluccaTextBox.Text);
             }
 
-            if (CentredServer2TextBox.Text?.Length == 0 || CentredServer2TextBox.Text == null)
+            if (CentredServerTrammelTextBox.Text?.Length == 0 || CentredServerTrammelTextBox.Text == null)
             {
-                MessageBox.Show("You must specify the CentredServer2.exe Folder");
+                MessageBox.Show("You must specify the CentredServerTrammel.exe Folder");
                 return false;
             }
             else
             {
-                AddUpdateAppSettings("CentredServer2TextBox.Text", CentredServer2TextBox.Text);
+                AddUpdateAppSettings("CentredServerTrammelTextBox.Text", CentredServerTrammelTextBox.Text);
+            }
+            
+            if (CentredServerIlshenarTextBox.Text?.Length == 0 || CentredServerIlshenarTextBox.Text == null)
+            {
+                MessageBox.Show("You must specify the CentredServerIlshenar.exe Folder");
+                return false;
+            }
+            else
+            {
+                AddUpdateAppSettings("CentredServerIlshenarTextBox.Text", CentredServerIlshenarTextBox.Text);
             }
 
             if (pyFileHasherTextBox.Text?.Length == 0 || pyFileHasherTextBox.Text == null)
@@ -517,11 +592,14 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                             case "ServUoFileFolderTextBox.Text":
                                 ServUoFileFolderTextBox.Text = appSettings[key];
                                 break;
-                            case "CentredServerTextBox.Text":
-                                CentredServerTextBox.Text = appSettings[key];
+                            case "CentredServerFeluccaTextBox.Text":
+                                CentredServerFeluccaTextBox.Text = appSettings[key];
                                 break;
-                            case "CentredServer2TextBox.Text":
-                                CentredServer2TextBox.Text = appSettings[key];
+                            case "CentredServerTrammelTextBox.Text":
+                                CentredServerTrammelTextBox.Text = appSettings[key];
+                                break;
+                            case "CentredServerIlshenarTextBox.Text":
+                                CentredServerIlshenarTextBox.Text = appSettings[key];
                                 break;
                             case "pyFileHasherTextBox.Text":
                                 pyFileHasherTextBox.Text = appSettings[key];
