@@ -1,6 +1,6 @@
 ﻿// /***************************************************************************
 //  *
-//  * $Author: Hurricane
+//  * $Author: Lion
 //  *
 //  ***************************************************************************/
 
@@ -9,15 +9,15 @@ using System.Windows.Forms;
 using UoFiddler.Controls.Plugin;
 using UoFiddler.Controls.Plugin.Interfaces;
 using Ultima;
-using UoFiddler.Plugin.UoMarsManagementTool.UserControls;
+using UoFiddler.Plugin.UoMarsProductionRelease.UserControls;
 
-namespace UoFiddler.Plugin.UoMarsManagementTool
+namespace UoFiddler.Plugin.UoMarsProductionRelease
 {
-    public class UoMarsManager : PluginBase
+    public class UoMarsProduction : PluginBase
     {
         private readonly Version _ver;
 
-        public UoMarsManager()
+        public UoMarsProduction()
         {
             _ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
         }
@@ -25,20 +25,18 @@ namespace UoFiddler.Plugin.UoMarsManagementTool
         /// <summary>
         /// Name of the plugin
         /// </summary>
-        public override string Name { get; } = "Uo Mars Manager Tool";
+        public override string Name { get; } = "Uo Mars Production Release";
 
         /// <summary>
         /// Description of the Plugin's purpose
         /// </summary>
-        public override string Description { get; } = "File conversion: from centred " +
-            "to UoMarsClient Patcher Folder, to ServUo File Folder and start pyFileHasher for versioning." +
-            "At the end, serverNode.js will be started";
+        public override string Description { get; } = "Release files to production server";
 
 
         /// <summary>
         /// Author of the plugin
         /// </summary>
-        public override string Author { get; } = "Hurricane";
+        public override string Author { get; } = "Lion";
 
         /// <summary>
         /// Version of the plugin
@@ -64,10 +62,10 @@ namespace UoFiddler.Plugin.UoMarsManagementTool
             TabPage page = new TabPage
             {
                 Tag = 0, // at end used for undock/dock feature to define the order
-                Text = "UoMars Manager Tool"
+                Text = "UoMars Prod release"
             };
             // da implementare la form
-            page.Controls.Add(new UoMarsManagerControl()); 
+            page.Controls.Add(new UoMarsProductionControl()); 
             tabControl.TabPages.Add(page);
         }
     }

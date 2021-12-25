@@ -5,6 +5,8 @@
 //  ***************************************************************************/
 
 
+using System.Windows.Forms;
+
 namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
 {
     partial class UoMarsManagerControl
@@ -28,50 +30,81 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
         }
 
         #region Codice generato da Progettazione componenti
-
         /// <summary> 
         /// Metodo necessario per il supporto della finestra di progettazione. Non modificare 
         /// il contenuto del metodo con l'editor di codice.
         /// </summary>
         private void InitializeComponent()
         {
-            this.CentredFileFolderLabel = new System.Windows.Forms.Label();
-            this.CentredFileFolderTextBox = new System.Windows.Forms.TextBox();
-            this.UoMarsClientFileFolderTextBox = new System.Windows.Forms.TextBox();
-            this.UoMarsFileFolderLabel = new System.Windows.Forms.Label();
-            this.selectCentredFileFolderBtn = new System.Windows.Forms.Button();
-            this.selectUoMarsClientFileFolderBtn = new System.Windows.Forms.Button();
-            this.CentredServerFeluccaLabel = new System.Windows.Forms.Label();
-            this.pyFileHasherLabel = new System.Windows.Forms.Label();
-            this.CentredServerFeluccaTextBox = new System.Windows.Forms.TextBox();
-            this.pyFileHasherTextBox = new System.Windows.Forms.TextBox();
-            this.CentredServerFeluccaBtn = new System.Windows.Forms.Button();
-            this.pyFileHasherBtn = new System.Windows.Forms.Button();
-            this.StartBtn = new System.Windows.Forms.Button();
-            this.CentredFileFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.UoMarsFileFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.CentredServerFeluccaExeFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.pyFileHasherFileFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.ServUoFileFolder = new System.Windows.Forms.Label();
-            this.ServUoFileFolderTextBox = new System.Windows.Forms.TextBox();
-            this.ServUoFileFolderBtn = new System.Windows.Forms.Button();
-            this.ServUoFileFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.ComputingTextBox = new System.Windows.Forms.Label();
-            this.eventTextBox = new System.Windows.Forms.TextBox();
-            this.ServUOLabel = new System.Windows.Forms.Label();
-            this.ServUOExeTextBox = new System.Windows.Forms.TextBox();
-            this.ServUOExeBtn = new System.Windows.Forms.Button();
-            this.ServUOExeFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.CentredServerTrammelLabel = new System.Windows.Forms.Label();
-            this.CentredServerTrammelTextBox = new System.Windows.Forms.TextBox();
-            this.CentredServerTrammelBtn = new System.Windows.Forms.Button();
-            this.CentredServerIlshenarLabel = new System.Windows.Forms.Label();
-            this.CentredServerIlshenarTextBox = new System.Windows.Forms.TextBox();
-            this.CentredServerIlshenarBtn = new System.Windows.Forms.Button();
-            this.CentredServerTrammelExeFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.CentredServerIlshenarExeFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.SuspendLayout();
+            SuspendLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             
+            #region EventBox
+            eventTextBox = new System.Windows.Forms.TextBox();
+            
+            this.eventTextBox.Location = new System.Drawing.Point(490, 20);
+            this.eventTextBox.Multiline = true;
+            this.eventTextBox.Name = "eventTextBox";
+            this.eventTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.eventTextBox.Size = new System.Drawing.Size(300, 230);
+            this.eventTextBox.TabIndex = 17;
+            #endregion
+            
+            int currentY = DeclarePatcherDesign(20);
+            DrawPatcher();
+
+            currentY += 50;
+            
+            currentY = DeclareDeployDesign(currentY);
+            DrawDeploy();
+
+            Name = "UoMarsManagerControl";
+            Size = new System.Drawing.Size(1040, 600);
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        #region designs
+        private int DeclarePatcherDesign(int currentY)
+        {
+            #region Initialyze classes
+            CentredFileFolderLabel = new System.Windows.Forms.Label();
+            CentredFileFolderTextBox = new System.Windows.Forms.TextBox();
+            UoMarsClientFileFolderTextBox = new System.Windows.Forms.TextBox();
+            UoMarsFileFolderLabel = new System.Windows.Forms.Label();
+            selectCentredFileFolderBtn = new System.Windows.Forms.Button();
+            selectUoMarsClientFileFolderBtn = new System.Windows.Forms.Button();
+            CentredServerFeluccaLabel = new System.Windows.Forms.Label();
+            pyFileHasherLabel = new System.Windows.Forms.Label();
+            CentredServerFeluccaTextBox = new System.Windows.Forms.TextBox();
+            pyFileHasherTextBox = new System.Windows.Forms.TextBox();
+            CentredServerFeluccaBtn = new System.Windows.Forms.Button();
+            pyFileHasherBtn = new System.Windows.Forms.Button();
+            StartBtn = new System.Windows.Forms.Button();
+            CentredFileFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            UoMarsFileFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            CentredServerFeluccaExeFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            pyFileHasherFileFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            ServUoFileFolder = new System.Windows.Forms.Label();
+            ServUoFileFolderTextBox = new System.Windows.Forms.TextBox();
+            ServUoFileFolderBtn = new System.Windows.Forms.Button();
+            ServUoFileFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            ComputingTextBox = new System.Windows.Forms.Label();
+            ServUOLabel = new System.Windows.Forms.Label();
+            ServUOExeTextBox = new System.Windows.Forms.TextBox();
+            ServUOExeBtn = new System.Windows.Forms.Button();
+            ServUOExeFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            CentredServerTrammelLabel = new System.Windows.Forms.Label();
+            CentredServerTrammelTextBox = new System.Windows.Forms.TextBox();
+            CentredServerTrammelBtn = new System.Windows.Forms.Button();
+            CentredServerIlshenarLabel = new System.Windows.Forms.Label();
+            CentredServerIlshenarTextBox = new System.Windows.Forms.TextBox();
+            CentredServerIlshenarBtn = new System.Windows.Forms.Button();
+            CentredServerTrammelExeFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            CentredServerIlshenarExeFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            #endregion
+
             // label
             int labelX = 10;
             int labelWidth = 95;
@@ -88,7 +121,6 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             int buttonHeight = 20;
 
             int labelYModifier = 3;
-            int currentY = 20;
             
             #region Centred File Folder
             // CentredFileFolderLabel
@@ -323,57 +355,251 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             this.ComputingTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
             this.ComputingTextBox.TabIndex = 18;
             this.ComputingTextBox.Text = "Waiting to patch";
-            
-            // this.ComputingTextBox.Location = new System.Drawing.Point(143, 353);
-            // this.ComputingTextBox.Name = "cavallo"; // ComputingTextBox
-            // this.ComputingTextBox.Size = new System.Drawing.Size(338, 20);
-            // this.ComputingTextBox.TabIndex = 16;
             #endregion
 
-            // eventTextBox
-            this.eventTextBox.Location = new System.Drawing.Point(490, 20);
-            this.eventTextBox.Multiline = true;
-            this.eventTextBox.Name = "eventTextBox";
-            this.eventTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.eventTextBox.Size = new System.Drawing.Size(300, 230);
-            this.eventTextBox.TabIndex = 17;
-            
-            // UoMarsManagerControl
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.CentredServerIlshenarBtn);
-            this.Controls.Add(this.CentredServerIlshenarLabel);
-            this.Controls.Add(this.CentredServerIlshenarTextBox);
-            this.Controls.Add(this.CentredServerTrammelBtn);
-            this.Controls.Add(this.CentredServerTrammelTextBox);
-            this.Controls.Add(this.CentredServerTrammelLabel);
-            this.Controls.Add(this.ServUOExeBtn);
-            this.Controls.Add(this.ServUOExeTextBox);
-            this.Controls.Add(this.ServUOLabel);
-            this.Controls.Add(this.eventTextBox);
-            this.Controls.Add(this.ComputingTextBox);
-            this.Controls.Add(this.ServUoFileFolderBtn);
-            this.Controls.Add(this.ServUoFileFolderTextBox);
-            this.Controls.Add(this.ServUoFileFolder);
-            this.Controls.Add(this.StartBtn);
-            this.Controls.Add(this.pyFileHasherBtn);
-            this.Controls.Add(this.CentredServerFeluccaBtn);
-            this.Controls.Add(this.pyFileHasherTextBox);
-            this.Controls.Add(this.CentredServerFeluccaTextBox);
-            this.Controls.Add(this.pyFileHasherLabel);
-            this.Controls.Add(this.CentredServerFeluccaLabel);
-            this.Controls.Add(this.selectUoMarsClientFileFolderBtn);
-            this.Controls.Add(this.selectCentredFileFolderBtn);
-            this.Controls.Add(this.UoMarsFileFolderLabel);
-            this.Controls.Add(this.UoMarsClientFileFolderTextBox);
-            this.Controls.Add(this.CentredFileFolderTextBox);
-            this.Controls.Add(this.CentredFileFolderLabel);
-            this.Name = "UoMarsManagerControl";
-            this.Size = new System.Drawing.Size(1040, 395);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            return currentY;
         }
+        private void DrawPatcher()
+        {
+            Controls.Add(CentredServerIlshenarBtn);
+            Controls.Add(CentredServerIlshenarLabel);
+            Controls.Add(CentredServerIlshenarTextBox);
+            Controls.Add(CentredServerTrammelBtn);
+            Controls.Add(CentredServerTrammelTextBox);
+            Controls.Add(CentredServerTrammelLabel);
+            Controls.Add(ServUOExeBtn);
+            Controls.Add(ServUOExeTextBox);
+            Controls.Add(ServUOLabel);
+            Controls.Add(eventTextBox);
+            Controls.Add(ComputingTextBox);
+            Controls.Add(ServUoFileFolderBtn);
+            Controls.Add(ServUoFileFolderTextBox);
+            Controls.Add(ServUoFileFolder);
+            Controls.Add(StartBtn);
+            Controls.Add(pyFileHasherBtn);
+            Controls.Add(CentredServerFeluccaBtn);
+            Controls.Add(pyFileHasherTextBox);
+            Controls.Add(CentredServerFeluccaTextBox);
+            Controls.Add(pyFileHasherLabel);
+            Controls.Add(CentredServerFeluccaLabel);
+            Controls.Add(selectUoMarsClientFileFolderBtn);
+            Controls.Add(selectCentredFileFolderBtn);
+            Controls.Add(UoMarsFileFolderLabel);
+            Controls.Add(UoMarsClientFileFolderTextBox);
+            Controls.Add(CentredFileFolderTextBox);
+            Controls.Add(CentredFileFolderLabel);
+        }
+        
+        private int DeclareDeployDesign(int currentY)
+        {
+            #region Initialyze classes
+            DeployTitle = new System.Windows.Forms.Label();
+            DeployIpLabel = new System.Windows.Forms.Label();
+            DeployIpTextBox = new System.Windows.Forms.TextBox();
+            DeployIpPortLabel = new System.Windows.Forms.Label();
+            DeployIpPortTextBox = new System.Windows.Forms.TextBox();
+            DeployUsernameLabel = new System.Windows.Forms.Label();
+            DeployUsernameTextBox = new System.Windows.Forms.TextBox();
+            DeployPasswordLabel = new System.Windows.Forms.Label();
+            DeployPasswordTextBox = new System.Windows.Forms.TextBox();
+            DeployLocalFolderLabel = new System.Windows.Forms.Label();
+            DeployLocalFolderTextBox = new System.Windows.Forms.TextBox();
+            DeployLocalFolderBtn = new System.Windows.Forms.Button();
+            DeployLocalFolderBrowserDialog = new FolderBrowserDialog();
+            DeployRemoteFolderLabel = new System.Windows.Forms.Label();
+            DeployRemoteFolderTextBox = new System.Windows.Forms.TextBox();
+            DeployRemoteScriptLabel = new System.Windows.Forms.Label();
+            DeployRemoteScriptTextBox = new System.Windows.Forms.TextBox();
+
+            DeployButton = new System.Windows.Forms.Button();
+            DeployButtonComputing = new System.Windows.Forms.Label();
+            #endregion
+
+            // label
+            int labelX = 10;
+            int labelWidth = 95;
+            int labelHeight = 13;
+            
+            // input
+            int inputX = 145;
+            int inputWidth = 200;
+            int inputHeight = 20;
+
+            int labelYModifier = 3;
+            
+            #region DeployTitle
+            DeployTitle.AutoSize = true;
+            DeployTitle.Location = new System.Drawing.Point(labelX, currentY+labelYModifier);
+            DeployTitle.Name = "DeployTitle";
+            DeployTitle.Size = new System.Drawing.Size(labelWidth, labelHeight);
+            DeployTitle.TabIndex = 0;
+            DeployTitle.Text = "Deploy in production";
+            #endregion
+
+            currentY += 30;
+            
+            #region Server IP - Port
+            DeployIpLabel.AutoSize = true;
+            DeployIpLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier);
+            DeployIpLabel.Name = "DeployIpLabel";
+            DeployIpLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
+            DeployIpLabel.TabIndex = 13;
+            DeployIpLabel.Text = "Server IP";
+            
+            DeployIpTextBox.Location = new System.Drawing.Point(inputX, currentY);
+            DeployIpTextBox.Name = "DeployIpTextBox";
+            DeployIpTextBox.Size = new System.Drawing.Size(inputWidth-100, inputHeight);
+            DeployIpTextBox.TabIndex = 14;
+            
+            DeployIpPortLabel.AutoSize = true;
+            DeployIpPortLabel.Location = new System.Drawing.Point(labelX+240, currentY+labelYModifier);
+            DeployIpPortLabel.Name = "DeployIpPortLabel";
+            DeployIpPortLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
+            DeployIpPortLabel.TabIndex = 13;
+            DeployIpPortLabel.Text = "port:";
+            
+            DeployIpPortTextBox.Location = new System.Drawing.Point(inputX+135, currentY);
+            DeployIpPortTextBox.Name = "DeployIpPortTextBox";
+            DeployIpPortTextBox.Size = new System.Drawing.Size(inputWidth-150, inputHeight);
+            DeployIpPortTextBox.TabIndex = 14;
+            #endregion
+            
+            currentY += 30;
+            
+            #region Server Username
+            DeployUsernameLabel.AutoSize = true;
+            DeployUsernameLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier);
+            DeployUsernameLabel.Name = "DeployUsernameLabel";
+            DeployUsernameLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
+            DeployUsernameLabel.TabIndex = 13;
+            DeployUsernameLabel.Text = "Server Username";
+            
+            DeployUsernameTextBox.Location = new System.Drawing.Point(inputX, currentY);
+            DeployUsernameTextBox.Name = "DeployUsernameTextBox";
+            DeployUsernameTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
+            DeployUsernameTextBox.TabIndex = 14;
+            #endregion
+            
+            currentY += 30;
+            
+            #region Server Password
+            DeployPasswordLabel.AutoSize = true;
+            DeployPasswordLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier);
+            DeployPasswordLabel.Name = "DeployPasswordLabel";
+            DeployPasswordLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
+            DeployPasswordLabel.TabIndex = 13;
+            DeployPasswordLabel.Text = "Server Password";
+
+            DeployPasswordTextBox.Location = new System.Drawing.Point(inputX, currentY);
+            DeployPasswordTextBox.Name = "DeployPasswordTextBox";
+            DeployPasswordTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
+            DeployPasswordTextBox.TabIndex = 14;
+            DeployPasswordTextBox.UseSystemPasswordChar = true;
+            DeployPasswordTextBox.PasswordChar = '-';
+            #endregion
+
+            currentY += 30;
+            
+            #region deployButton
+            DeployButton.Location = new System.Drawing.Point(labelX, currentY);
+            DeployButton.Name = "DeployButton";
+            DeployButton.Size = new System.Drawing.Size(100, 20);
+            DeployButton.TabIndex = 12;
+            DeployButton.Text = "Deploy";
+            DeployButton.UseVisualStyleBackColor = true;
+            DeployButton.Click += new System.EventHandler(DeployProduction_Click);
+            
+            // ComputingTextBox
+            DeployButtonComputing.AutoSize = true;
+            DeployButtonComputing.Location = new System.Drawing.Point(inputX, currentY+labelYModifier);
+            DeployButtonComputing.Name = "DeployButtonComputing";
+            DeployButtonComputing.Size = new System.Drawing.Size(inputWidth, inputHeight);
+            DeployButtonComputing.TabIndex = 18;
+            DeployButtonComputing.Text = "";
+            #endregion
+
+            labelX += 350;
+            inputX += 350;
+            
+            int buttonX = 680;
+            int buttonWidth = 30;
+            int buttonHeight = 20;
+            
+            #region Local Folder
+            DeployLocalFolderLabel.AutoSize = true;
+            DeployLocalFolderLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier-90);
+            DeployLocalFolderLabel.Name = "DeployLocalFolderLabel";
+            DeployLocalFolderLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
+            DeployLocalFolderLabel.TabIndex = 21;
+            DeployLocalFolderLabel.Text = "Cartella locale da caricare";
+            
+            DeployLocalFolderTextBox.Location = new System.Drawing.Point(inputX+10, currentY-90);
+            DeployLocalFolderTextBox.Name = "DeployLocalFolderTextBox";
+            DeployLocalFolderTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
+            DeployLocalFolderTextBox.TabIndex = 22;
+            
+            DeployLocalFolderBtn.Location = new System.Drawing.Point(buttonX+30, currentY-90);
+            DeployLocalFolderBtn.Name = "DeployLocalFolderBtn";
+            DeployLocalFolderBtn.Size = new System.Drawing.Size(buttonWidth, buttonHeight);
+            DeployLocalFolderBtn.TabIndex = 23;
+            DeployLocalFolderBtn.Text = "...";
+            DeployLocalFolderBtn.UseVisualStyleBackColor = true;
+            DeployLocalFolderBtn.Click += new System.EventHandler(SelectLocalFolderBtn_Click);
+            #endregion
+            
+            #region Remote Folder
+            DeployRemoteFolderLabel.AutoSize = true;
+            DeployRemoteFolderLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier-60);
+            DeployRemoteFolderLabel.Name = "DeployRemoteFolderLabel";
+            DeployRemoteFolderLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
+            DeployRemoteFolderLabel.TabIndex = 21;
+            DeployRemoteFolderLabel.Text = "Cartella destinazione server";
+            
+            DeployRemoteFolderTextBox.Location = new System.Drawing.Point(inputX+10, currentY-60);
+            DeployRemoteFolderTextBox.Name = "DeployRemoteFolderTextBox";
+            DeployRemoteFolderTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
+            DeployRemoteFolderTextBox.TabIndex = 22;
+            #endregion
+            
+            #region Remote Script
+            DeployRemoteScriptLabel.AutoSize = true;
+            DeployRemoteScriptLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier-30);
+            DeployRemoteScriptLabel.Name = "DeployRemoteScriptLabel";
+            DeployRemoteScriptLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
+            DeployRemoteScriptLabel.TabIndex = 21;
+            DeployRemoteScriptLabel.Text = "Comando server fine deploy";
+            
+            DeployRemoteScriptTextBox.Location = new System.Drawing.Point(inputX+10, currentY-30);
+            DeployRemoteScriptTextBox.Name = "DeployRemoteScriptTextBox";
+            DeployRemoteScriptTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
+            DeployRemoteScriptTextBox.TabIndex = 22;
+            #endregion
+            
+            return currentY;
+        }
+        private void DrawDeploy()
+        {
+            Controls.Add(DeployTitle);
+            Controls.Add(DeployIpLabel);
+            Controls.Add(DeployIpTextBox);
+            Controls.Add(DeployIpPortLabel);
+            Controls.Add(DeployIpPortTextBox);
+            Controls.Add(DeployUsernameLabel);
+            Controls.Add(DeployUsernameTextBox);
+            Controls.Add(DeployPasswordLabel);
+            Controls.Add(DeployPasswordTextBox);
+            Controls.Add(DeployLocalFolderLabel);
+            Controls.Add(DeployLocalFolderTextBox);
+            Controls.Add(DeployLocalFolderBtn);
+            Controls.Add(DeployRemoteFolderLabel);
+            Controls.Add(DeployRemoteFolderTextBox);
+            Controls.Add(DeployRemoteScriptLabel);
+            Controls.Add(DeployRemoteScriptTextBox);
+            
+            Controls.Add(DeployButton);
+            Controls.Add(DeployButtonComputing);
+        }
+        #endregion
 
         #endregion
 
@@ -412,5 +638,26 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
         private System.Windows.Forms.Button CentredServerIlshenarBtn;
         private System.Windows.Forms.FolderBrowserDialog CentredServerTrammelExeFolderBrowserDialog;
         private System.Windows.Forms.FolderBrowserDialog CentredServerIlshenarExeFolderBrowserDialog;
+
+        private System.Windows.Forms.Label DeployTitle;
+        private System.Windows.Forms.Label DeployIpLabel;
+        private System.Windows.Forms.TextBox DeployIpTextBox;
+        private System.Windows.Forms.Label DeployIpPortLabel;
+        private System.Windows.Forms.TextBox DeployIpPortTextBox;
+        private System.Windows.Forms.Label DeployUsernameLabel;
+        private System.Windows.Forms.TextBox DeployUsernameTextBox;
+        private System.Windows.Forms.Label DeployPasswordLabel;
+        private System.Windows.Forms.TextBox DeployPasswordTextBox;
+        private System.Windows.Forms.Label DeployLocalFolderLabel;
+        private System.Windows.Forms.TextBox DeployLocalFolderTextBox;
+        private System.Windows.Forms.Button DeployLocalFolderBtn;
+        private System.Windows.Forms.FolderBrowserDialog DeployLocalFolderBrowserDialog;
+        private System.Windows.Forms.Label DeployRemoteFolderLabel;
+        private System.Windows.Forms.TextBox DeployRemoteFolderTextBox;
+        private System.Windows.Forms.Label DeployRemoteScriptLabel;
+        private System.Windows.Forms.TextBox DeployRemoteScriptTextBox;
+        
+        private System.Windows.Forms.Button DeployButton;
+        private System.Windows.Forms.Label DeployButtonComputing;
     }
 }

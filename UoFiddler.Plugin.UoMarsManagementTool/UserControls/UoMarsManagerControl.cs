@@ -6,18 +6,13 @@
 
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using UoFiddler.Plugin.UopPacker.Classes;
 using System.Configuration;
-using System.Collections.Specialized;
 using System.Diagnostics;
+using Renci.SshNet;
+using UoFiddler.Plugin.UoMarsManagementTool.Classes;
 
 namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
 {
@@ -111,6 +106,132 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             {
                 ServUOExeTextBox.Text = ServUoFileFolderBrowserDialog.SelectedPath;
             }
+        }
+        
+        private void SelectLocalFolderBtn_Click(object sender, EventArgs e)
+        {
+            if (DeployLocalFolderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                DeployLocalFolderTextBox.Text = DeployLocalFolderBrowserDialog.SelectedPath;
+            }
+        }
+
+        private void DeployProduction_Click(object sender, EventArgs e)
+        {
+            SaveDeploySettings();
+            if (DeployButtonComputing != null && DeployButtonComputing.Text != null) DeployButtonComputing.Text = String.Empty;
+            if (eventTextBox != null && eventTextBox.Text != null) eventTextBox.Text = String.Empty;
+            
+            #region ValidatingFields
+            // validating fields
+            string serverIp = DeployIpTextBox?.Text;
+            if (String.IsNullOrEmpty(serverIp))
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Aggiungi un Server IP valido";
+                }
+                
+                MessageBox.Show("Aggiungi un Server IP valido");
+                return;
+            }
+
+            int serverPort = 0;
+            try
+            {
+                serverPort = Int32.Parse(DeployIpPortTextBox.Text);
+                if (serverPort <= 0)
+                {
+                    if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                    if (eventTextBox != null)
+                    {
+                        eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                        eventTextBox.Text += "Aggiungi una Server Port valida";
+                    }
+                    
+                    MessageBox.Show("Aggiungi una Server Port valida");
+                    return;
+                }
+            }
+            catch
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Server Port: Inserire un valore intero valido";
+                }
+                
+                MessageBox.Show("Server Port: Inserire un valore intero valido");
+                return;
+            }
+
+            string serverUsername = DeployUsernameTextBox.Text;
+            if (String.IsNullOrEmpty(serverUsername))
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Aggiungi un Server Username valido";
+                }
+                
+                MessageBox.Show("Aggiungi un Server Username valido");
+                return;
+            }
+
+            string serverPassword = DeployPasswordTextBox.Text;
+            if (String.IsNullOrEmpty(serverPassword))
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Aggiungi una Server Password valida";
+                }
+                
+                MessageBox.Show("Aggiungi una Server Password valida");
+                return;
+            }
+            
+            string localFolder = DeployLocalFolderTextBox.Text;
+            if (String.IsNullOrEmpty(localFolder))
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Aggiungi una cartella locale valida";
+                }
+                
+                MessageBox.Show("Aggiungi una cartella locale valida");
+                return;
+            }
+            
+            string remotePath = DeployRemoteFolderTextBox.Text;
+            if (String.IsNullOrEmpty(remotePath))
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Aggiungi una cartella remota valida";
+                }
+                
+                MessageBox.Show("Aggiungi una cartella remota valida");
+                return;
+            }
+            #endregion
+
+            DeployProduction deployer = new DeployProduction(serverIp, serverPort, serverUsername, serverPassword, remotePath, localFolder, DeployRemoteScriptTextBox.Text)
+            {
+                DeployButtonComputing = DeployButtonComputing,
+                EventTextBox = eventTextBox
+            };
+            
+            deployer.Deploy();
         }
         #endregion
 
@@ -484,6 +605,17 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
         #endregion
 
         #region Setting/Input Methods
+
+        private void SaveDeploySettings()
+        {
+            AddUpdateAppSettings("DeployIpTextBox.Text", DeployIpTextBox.Text);
+            AddUpdateAppSettings("DeployIpPortTextBox.Text", DeployIpPortTextBox.Text);
+            AddUpdateAppSettings("DeployUsernameTextBox.Text", DeployUsernameTextBox.Text);
+            AddUpdateAppSettings("DeployLocalFolderTextBox.Text", DeployLocalFolderTextBox.Text);
+            AddUpdateAppSettings("DeployRemoteFolderTextBox.Text", DeployRemoteFolderTextBox.Text);
+            AddUpdateAppSettings("DeployRemoteScriptTextBox.Text", DeployRemoteScriptTextBox.Text);
+        }
+        
         private bool CheckAllInputFolder()
         {
             if (CentredFileFolderTextBox.Text?.Length == 0 || CentredFileFolderTextBox.Text == null)
@@ -606,6 +738,24 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                                 break;
                             case "ServUOExeTextBox.Text":
                                 ServUOExeTextBox.Text = appSettings[key];
+                                break;
+                            case "DeployIpTextBox.Text":
+                                DeployIpTextBox.Text = appSettings[key];
+                                break;
+                            case "DeployIpPortTextBox.Text":
+                                DeployIpPortTextBox.Text = appSettings[key];
+                                break;
+                            case "DeployUsernameTextBox.Text":
+                                DeployUsernameTextBox.Text = appSettings[key];
+                                break;
+                            case "DeployLocalFolderTextBox.Text":
+                                DeployLocalFolderTextBox.Text = appSettings[key];
+                                break;
+                            case "DeployRemoteFolderTextBox.Text":
+                                DeployRemoteFolderTextBox.Text = appSettings[key];
+                                break;
+                            case "DeployRemoteScriptTextBox.Text":
+                                DeployRemoteScriptTextBox.Text = appSettings[key];
                                 break;
                         }
                     }
