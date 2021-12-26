@@ -103,6 +103,10 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             CentredServerIlshenarBtn = new System.Windows.Forms.Button();
             CentredServerTrammelExeFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             CentredServerIlshenarExeFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            BackupLabel = new System.Windows.Forms.Label();
+            BackupTextBox = new System.Windows.Forms.TextBox();
+            BackupBtn = new System.Windows.Forms.Button();
+            BackupFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             #endregion
 
             // label
@@ -338,6 +342,30 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             
             currentY += 30;
             
+            #region BackupFolder
+            BackupLabel.AutoSize = true;
+            BackupLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier);
+            BackupLabel.Name = "BackupLabel";
+            BackupLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
+            BackupLabel.TabIndex = 18;
+            BackupLabel.Text = "Backup Folder";
+            
+            BackupTextBox.Location = new System.Drawing.Point(inputX, currentY);
+            BackupTextBox.Name = "BackupTextBox";
+            BackupTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
+            BackupTextBox.TabIndex = 19;
+            
+            BackupBtn.Location = new System.Drawing.Point(buttonX, currentY);
+            BackupBtn.Name = "BackupBtn";
+            BackupBtn.Size = new System.Drawing.Size(buttonWidth, buttonHeight);
+            BackupBtn.TabIndex = 20;
+            BackupBtn.Text = "...";
+            BackupBtn.UseVisualStyleBackColor = true;
+            BackupBtn.Click += new System.EventHandler(BackupBtn_Click);
+            #endregion
+            
+            currentY += 30;
+            
             #region Start Area
             // StartBtn
             this.StartBtn.Location = new System.Drawing.Point(labelX, currentY);
@@ -388,6 +416,9 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             Controls.Add(UoMarsClientFileFolderTextBox);
             Controls.Add(CentredFileFolderTextBox);
             Controls.Add(CentredFileFolderLabel);
+            Controls.Add(BackupLabel);
+            Controls.Add(BackupTextBox);
+            Controls.Add(BackupBtn);
         }
         
         private int DeclareDeployDesign(int currentY)
@@ -406,8 +437,6 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             DeployLocalFolderTextBox = new System.Windows.Forms.TextBox();
             DeployLocalFolderBtn = new System.Windows.Forms.Button();
             DeployLocalFolderBrowserDialog = new FolderBrowserDialog();
-            DeployRemoteFolderLabel = new System.Windows.Forms.Label();
-            DeployRemoteFolderTextBox = new System.Windows.Forms.TextBox();
             DeployRemoteScriptLabel = new System.Windows.Forms.Label();
             DeployRemoteScriptTextBox = new System.Windows.Forms.TextBox();
 
@@ -527,18 +556,18 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             
             #region Local Folder
             DeployLocalFolderLabel.AutoSize = true;
-            DeployLocalFolderLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier-90);
+            DeployLocalFolderLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier-60);
             DeployLocalFolderLabel.Name = "DeployLocalFolderLabel";
             DeployLocalFolderLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
             DeployLocalFolderLabel.TabIndex = 21;
             DeployLocalFolderLabel.Text = "Cartella locale da caricare";
             
-            DeployLocalFolderTextBox.Location = new System.Drawing.Point(inputX+10, currentY-90);
+            DeployLocalFolderTextBox.Location = new System.Drawing.Point(inputX+10, currentY-60);
             DeployLocalFolderTextBox.Name = "DeployLocalFolderTextBox";
             DeployLocalFolderTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
             DeployLocalFolderTextBox.TabIndex = 22;
             
-            DeployLocalFolderBtn.Location = new System.Drawing.Point(buttonX+30, currentY-90);
+            DeployLocalFolderBtn.Location = new System.Drawing.Point(buttonX+30, currentY-60);
             DeployLocalFolderBtn.Name = "DeployLocalFolderBtn";
             DeployLocalFolderBtn.Size = new System.Drawing.Size(buttonWidth, buttonHeight);
             DeployLocalFolderBtn.TabIndex = 23;
@@ -546,21 +575,7 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             DeployLocalFolderBtn.UseVisualStyleBackColor = true;
             DeployLocalFolderBtn.Click += new System.EventHandler(SelectLocalFolderBtn_Click);
             #endregion
-            
-            #region Remote Folder
-            DeployRemoteFolderLabel.AutoSize = true;
-            DeployRemoteFolderLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier-60);
-            DeployRemoteFolderLabel.Name = "DeployRemoteFolderLabel";
-            DeployRemoteFolderLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
-            DeployRemoteFolderLabel.TabIndex = 21;
-            DeployRemoteFolderLabel.Text = "Cartella destinazione server";
-            
-            DeployRemoteFolderTextBox.Location = new System.Drawing.Point(inputX+10, currentY-60);
-            DeployRemoteFolderTextBox.Name = "DeployRemoteFolderTextBox";
-            DeployRemoteFolderTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
-            DeployRemoteFolderTextBox.TabIndex = 22;
-            #endregion
-            
+
             #region Remote Script
             DeployRemoteScriptLabel.AutoSize = true;
             DeployRemoteScriptLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier-30);
@@ -591,8 +606,6 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             Controls.Add(DeployLocalFolderLabel);
             Controls.Add(DeployLocalFolderTextBox);
             Controls.Add(DeployLocalFolderBtn);
-            Controls.Add(DeployRemoteFolderLabel);
-            Controls.Add(DeployRemoteFolderTextBox);
             Controls.Add(DeployRemoteScriptLabel);
             Controls.Add(DeployRemoteScriptTextBox);
             
@@ -629,6 +642,9 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
         private System.Windows.Forms.Label ServUOLabel;
         private System.Windows.Forms.TextBox ServUOExeTextBox;
         private System.Windows.Forms.Button ServUOExeBtn;
+        private System.Windows.Forms.Label BackupLabel;
+        private System.Windows.Forms.TextBox BackupTextBox;
+        private System.Windows.Forms.Button BackupBtn;
         private System.Windows.Forms.FolderBrowserDialog ServUOExeFolderBrowserDialog;
         private System.Windows.Forms.Label CentredServerTrammelLabel;
         private System.Windows.Forms.TextBox CentredServerTrammelTextBox;
@@ -638,6 +654,7 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
         private System.Windows.Forms.Button CentredServerIlshenarBtn;
         private System.Windows.Forms.FolderBrowserDialog CentredServerTrammelExeFolderBrowserDialog;
         private System.Windows.Forms.FolderBrowserDialog CentredServerIlshenarExeFolderBrowserDialog;
+        private System.Windows.Forms.FolderBrowserDialog BackupFolderBrowserDialog;
 
         private System.Windows.Forms.Label DeployTitle;
         private System.Windows.Forms.Label DeployIpLabel;
@@ -652,8 +669,6 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
         private System.Windows.Forms.TextBox DeployLocalFolderTextBox;
         private System.Windows.Forms.Button DeployLocalFolderBtn;
         private System.Windows.Forms.FolderBrowserDialog DeployLocalFolderBrowserDialog;
-        private System.Windows.Forms.Label DeployRemoteFolderLabel;
-        private System.Windows.Forms.TextBox DeployRemoteFolderTextBox;
         private System.Windows.Forms.Label DeployRemoteScriptLabel;
         private System.Windows.Forms.TextBox DeployRemoteScriptTextBox;
         

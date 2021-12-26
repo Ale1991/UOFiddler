@@ -108,6 +108,14 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             }
         }
         
+        private void BackupBtn_Click(object sender, EventArgs e)
+        {
+            if (BackupFolderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                BackupTextBox.Text = BackupFolderBrowserDialog.SelectedPath;
+            }
+        }
+        
         private void SelectLocalFolderBtn_Click(object sender, EventArgs e)
         {
             if (DeployLocalFolderBrowserDialog.ShowDialog() == DialogResult.OK)
@@ -209,23 +217,17 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                 MessageBox.Show("Aggiungi una cartella locale valida");
                 return;
             }
-            
-            string remotePath = DeployRemoteFolderTextBox.Text;
-            if (String.IsNullOrEmpty(remotePath))
-            {
-                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
-                if (eventTextBox != null)
-                {
-                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
-                    eventTextBox.Text += "Aggiungi una cartella remota valida";
-                }
-                
-                MessageBox.Show("Aggiungi una cartella remota valida");
-                return;
-            }
             #endregion
 
-            DeployProduction deployer = new DeployProduction(serverIp, serverPort, serverUsername, serverPassword, remotePath, localFolder, DeployRemoteScriptTextBox.Text)
+            DeployProduction deployer = new DeployProduction(
+                serverIp, 
+                serverPort, 
+                serverUsername, 
+                serverPassword, 
+                localFolder, 
+                DeployRemoteScriptTextBox.Text,
+                pyFileHasherTextBox?.Text
+            )
             {
                 DeployButtonComputing = DeployButtonComputing,
                 EventTextBox = eventTextBox
@@ -470,7 +472,6 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                         if (eventTextBox != null)
                             eventTextBox.Text += $"{fileName} Copied in {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}" + Environment.NewLine;
                     }
-
                 }
                 else
                 {
@@ -479,7 +480,9 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                     if (eventTextBox != null)
                         eventTextBox.Text += $"{fileName} not exists in {new DirectoryInfo(UoMarsClientFileFolderTextBox.Text).Name}. Copied" + Environment.NewLine;
                 }
-
+                
+                // moving into backup folder
+                MoveFileToBackupFolder(file, Path.GetFileName(file));
             }
         }
         private void MoveFileFromCentredToServUoFileFolder(string file, string fileName)
@@ -498,11 +501,30 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                 }
 
                 File.Copy(file, destFilePath);
+                
+                // moving into backup folder
+                MoveFileToBackupFolder(file, Path.GetFileName(file));
 
                 if (eventTextBox != null)
                     eventTextBox.Text += $"{fileName} Copied in {new DirectoryInfo(ServUoFileFolderTextBox.Text).Name}" + Environment.NewLine;
             }
         }
+
+        private void MoveFileToBackupFolder(string file, string fileName)
+        {
+            if(BackupTextBox?.Text != null && BackupTextBox.Text.Length <= 0 || !Directory.Exists(BackupTextBox.Text)) return;
+            if (!File.Exists(file)) return;
+            
+            string destFilePath = Path.Combine(BackupTextBox.Text, fileName);
+
+            if (File.Exists(destFilePath)) File.Delete(destFilePath);
+            File.Copy(file, destFilePath);
+
+            if (eventTextBox != null)
+                eventTextBox.Text += $"{fileName} Copied in {new DirectoryInfo(BackupTextBox.Text).Name}" + Environment.NewLine;
+            
+        }
+        
         private void MoveFiles()
         {
             if (CentredFileFolderTextBox.Text?.Length != 0 && CentredFileFolderTextBox.Text != null
@@ -515,7 +537,7 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                         MoveFileFromCentredToUoMarsClientFileFolder(file, Path.GetFileName(file));
 
                     if (mulFileForServUoFileFolder.Contains(Path.GetFileName(file)))
-                        MoveFileFromCentredToServUoFileFolder(file, Path.GetFileName(file));    
+                        MoveFileFromCentredToServUoFileFolder(file, Path.GetFileName(file));
                 }
             }
         }
@@ -591,15 +613,24 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             _success = _total = 0;
 
             Pack("art.mul", "artidx.mul", Path.Combine(UoMarsClientFileFolderTextBox.Text, "artLegacyMUL.uop"), FileType.ArtLegacyMul, 0);
+            MoveFileToBackupFolder(Path.Combine(UoMarsClientFileFolderTextBox.Text, "artLegacyMUL.uop"), "artLegacyMUL.uop");
+
             Pack("gumpart.mul", "gumpidx.mul", Path.Combine(UoMarsClientFileFolderTextBox.Text, "gumpartLegacyMUL.uop"), FileType.GumpartLegacyMul, 0);
+            MoveFileToBackupFolder(Path.Combine(UoMarsClientFileFolderTextBox.Text, "gumpartLegacyMUL.uop"), "gumpartLegacyMUL.uop");
+
             Pack("sound.mul", "soundidx.mul", Path.Combine(UoMarsClientFileFolderTextBox.Text, "soundLegacyMUL.uop"), FileType.SoundLegacyMul, 0);
+            MoveFileToBackupFolder(Path.Combine(UoMarsClientFileFolderTextBox.Text, "soundLegacyMUL.uop"), "soundLegacyMUL.uop");
 
             for (int i = 0; i <= 5; ++i)
             {
                 string map = $"map{i}";
                 Pack(map + ".mul", null, Path.Combine(UoMarsClientFileFolderTextBox.Text, map + "LegacyMUL.uop"), FileType.MapLegacyMul, i);
+                MoveFileToBackupFolder(Path.Combine(UoMarsClientFileFolderTextBox.Text, map + "LegacyMUL.uop"), map + "LegacyMUL.uop");
+
                 Pack(map + "x.mul", null, Path.Combine(UoMarsClientFileFolderTextBox.Text, map + "xLegacyMUL.uop"), FileType.MapLegacyMul, i);
+                MoveFileToBackupFolder(Path.Combine(UoMarsClientFileFolderTextBox.Text, map + "xLegacyMUL.uop"),map + "xLegacyMUL.uop");
             }
+            
             ComputingTextBox.Text = $"Done ({_success}/{_total} files packed)";
         }
         #endregion
@@ -612,7 +643,6 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             AddUpdateAppSettings("DeployIpPortTextBox.Text", DeployIpPortTextBox.Text);
             AddUpdateAppSettings("DeployUsernameTextBox.Text", DeployUsernameTextBox.Text);
             AddUpdateAppSettings("DeployLocalFolderTextBox.Text", DeployLocalFolderTextBox.Text);
-            AddUpdateAppSettings("DeployRemoteFolderTextBox.Text", DeployRemoteFolderTextBox.Text);
             AddUpdateAppSettings("DeployRemoteScriptTextBox.Text", DeployRemoteScriptTextBox.Text);
         }
         
@@ -697,6 +727,12 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             {
                 AddUpdateAppSettings("ServUOExeTextBox.Text", ServUOExeTextBox.Text);
             }
+            
+            if (BackupTextBox?.Text?.Length > 0)
+            {
+                AddUpdateAppSettings("BackupTextBox.Text", BackupTextBox.Text);
+            }
+            
             return true;
         }
         private void ReadAllSettings()
@@ -751,11 +787,11 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                             case "DeployLocalFolderTextBox.Text":
                                 DeployLocalFolderTextBox.Text = appSettings[key];
                                 break;
-                            case "DeployRemoteFolderTextBox.Text":
-                                DeployRemoteFolderTextBox.Text = appSettings[key];
-                                break;
                             case "DeployRemoteScriptTextBox.Text":
                                 DeployRemoteScriptTextBox.Text = appSettings[key];
+                                break;
+                            case "BackupTextBox.Text":
+                                BackupTextBox.Text = appSettings[key];
                                 break;
                         }
                     }
