@@ -43,6 +43,7 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                 eventTextBox.Text = String.Empty;
 
             CloseAllProcess();
+            ClearBackupFolder();
 
             if (CheckAllInputFolder())
                 PackMulToUopForUoMarsClientFileFolder();
@@ -219,6 +220,9 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             }
             #endregion
 
+            DeployButtonComputing.Text = "Deploy avviato!";
+            eventTextBox.Text += "Deploy avviato, creo i packages..." + Environment.NewLine;
+            
             DeployProduction deployer = new DeployProduction(
                 serverIp, 
                 serverPort, 
@@ -509,20 +513,43 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                     eventTextBox.Text += $"{fileName} Copied in {new DirectoryInfo(ServUoFileFolderTextBox.Text).Name}" + Environment.NewLine;
             }
         }
-
+        
         private void MoveFileToBackupFolder(string file, string fileName)
         {
-            if(BackupTextBox?.Text != null && BackupTextBox.Text.Length <= 0 || !Directory.Exists(BackupTextBox.Text)) return;
+            if (BackupTextBox?.Text != null && BackupTextBox.Text.Length <= 0 || !Directory.Exists(BackupTextBox.Text)) return;
             if (!File.Exists(file)) return;
             
-            string destFilePath = Path.Combine(BackupTextBox.Text, fileName);
-
-            if (File.Exists(destFilePath)) File.Delete(destFilePath);
-            File.Copy(file, destFilePath);
+            // creating folders
+            if(!Directory.Exists(Path.Combine(BackupTextBox.Text, "server")))
+                Directory.CreateDirectory(Path.Combine(BackupTextBox.Text, "server"));
+            
+            if(!Directory.Exists(Path.Combine(BackupTextBox.Text, "client")))
+                Directory.CreateDirectory(Path.Combine(BackupTextBox.Text, "client"));
+            
+            if (mulFileForServUoFileFolder.Contains(fileName))
+            {
+                string destFilePath = Path.Combine(BackupTextBox.Text, "server", fileName);
+                if(!File.Exists(destFilePath)) File.Copy(file, destFilePath);
+            }
+            
+            if (mulFileForUoMarsClientFileFolder.Contains(fileName) || fileName.EndsWith(".uop"))
+            {
+                string destFilePath = Path.Combine(BackupTextBox.Text, "client", fileName);
+                if(!File.Exists(destFilePath)) File.Copy(file, destFilePath);
+            }
 
             if (eventTextBox != null)
                 eventTextBox.Text += $"{fileName} Copied in {new DirectoryInfo(BackupTextBox.Text).Name}" + Environment.NewLine;
+        }
+
+        private void ClearBackupFolder()
+        {
+            if(BackupTextBox?.Text != null && BackupTextBox.Text.Length <= 0 || !Directory.Exists(BackupTextBox.Text)) return;
             
+            // cleaning folder
+            System.IO.DirectoryInfo di = new DirectoryInfo(BackupTextBox.Text);
+            foreach (FileInfo f in di.GetFiles()) f.Delete();
+            foreach (DirectoryInfo dir in di.GetDirectories()) dir.Delete(true);
         }
         
         private void MoveFiles()

@@ -17,7 +17,6 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.Classes
         private readonly string LocalFolder;
         private readonly string RemoteScript;
         private readonly string PyFileHasherFolder;
-        private List<string> FilesList;
         private string GeneratedDeployFolderName;
 
         public TextBox EventTextBox;
@@ -79,8 +78,6 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.Classes
 
         private bool GenerateAndMovePack()
         {
-            FilesList = new List<string>();
-
             if (!Directory.Exists(LocalFolder))
             {
                 Error($"La cartella locale scelta non esiste");
@@ -88,40 +85,37 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.Classes
             }
             
             // Getting all files inside the folder
-            FilesList = Directory.GetFiles(LocalFolder).ToList();
+            List<string> directories = Directory.GetDirectories(LocalFolder).ToList();
             
-            if (FilesList.Count <= 0)
+            if (directories.Count <= 0)
             {
-                Error($"Non ci sono file da caricare nella cartella locale scelta");
-                return false;
+                Error($"Non ci sono file da caricare nella cartella locale sceltam, skipping");
+                return true;
             }
 
-            if (FilesList.Where(x => x.EndsWith(".zip")).ToList().Count == 1)
-            {
-                GeneratedDeployFolderName = Path.GetFileName(FilesList.Where(x => x.EndsWith(".zip")).ToList()[0]);
-                EventMessage($"Esiste già un package nella directory... Carico quello! ({GeneratedDeployFolderName})");
-            }
-            else
-            {
-                // Creating folder to compress
-                EventMessage("Genero package con i files...");
-                GeneratedDeployFolderName = "deploy_" + DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                string destinationFolder = Path.Combine(LocalFolder, GeneratedDeployFolderName);
-                
-                Directory.CreateDirectory(destinationFolder);
-                foreach (string file in FilesList)
-                {
-                    File.Move(file, Path.Combine(destinationFolder, Path.GetFileName(file)));
-                }
+            // Creating folder to compress
+            EventMessage("Genero package con i files...");
             
-                // Compressing folder
-                ZipFile.CreateFromDirectory(destinationFolder, destinationFolder+".zip");
+            // zipping server folder
+            if(Directory.Exists(Path.Combine(LocalFolder, "server")))
+                ZipFile.CreateFromDirectory(Path.Combine(LocalFolder, "server"), Path.Combine(LocalFolder, "server.zip"));
             
-                // Removing original folder
-                Directory.Delete(destinationFolder, true);
-                EventMessage($"Package generato! ({destinationFolder}.zip)");
-                GeneratedDeployFolderName += ".zip";
-            }
+            // zipping client folder
+            if(Directory.Exists(Path.Combine(LocalFolder, "client")))
+                ZipFile.CreateFromDirectory(Path.Combine(LocalFolder, "client"), Path.Combine(LocalFolder, "client.zip"));
+
+            // Creating final folder
+            string destinationFolder = Path.Combine(LocalFolder, "deploy_latest");
+            Directory.CreateDirectory(destinationFolder);
+            
+            // Moving zip files inside the final folder
+            File.Move(Path.Combine(LocalFolder, "server.zip"), Path.Combine(destinationFolder, "server.zip"));
+            File.Move(Path.Combine(LocalFolder, "client.zip"), Path.Combine(destinationFolder, "client.zip"));
+        
+            // Compressing folder
+            ZipFile.CreateFromDirectory(destinationFolder, destinationFolder + ".zip");
+
+            EventMessage($"Package generato! ({destinationFolder}.zip)");
             
             // Moving file as _latest to the pyFileHasher Folder
             if (PyFileHasherFolder.Length > 0)
@@ -129,9 +123,14 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.Classes
                 string filename = Path.Combine(PyFileHasherFolder, "deploy_latest.zip");
                 if(File.Exists(filename)) File.Delete(filename);
                 
-                File.Move(Path.Combine(LocalFolder, GeneratedDeployFolderName), filename);
+                File.Move(Path.Combine(LocalFolder, "deploy_latest.zip"), filename);
             }
 
+            // Cleaning up
+            Directory.Delete(destinationFolder, true);
+            Directory.Delete(Path.Combine(LocalFolder, "server"), true);
+            Directory.Delete(Path.Combine(LocalFolder, "client"), true);
+            
             return true;
         }
 
