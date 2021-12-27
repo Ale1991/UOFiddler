@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using UoFiddler.Plugin.UopPacker.Classes;
 using System.Configuration;
 using System.Diagnostics;
+using System.Threading;
 using Renci.SshNet;
 using UoFiddler.Plugin.UoMarsManagementTool.Classes;
 
@@ -121,11 +122,11 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
         {
             if (DeployLocalFolderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                DeployLocalFolderTextBox.Text = DeployLocalFolderBrowserDialog.SelectedPath;
+                DeployPullScriptTextBox.Text = DeployLocalFolderBrowserDialog.SelectedPath;
             }
         }
 
-        private void DeployProduction_Click(object sender, EventArgs e)
+        private void DeployPullCodeProduction_Click(object sender, EventArgs e)
         {
             SaveDeploySettings();
             if (DeployButtonComputing != null && DeployButtonComputing.Text != null) DeployButtonComputing.Text = String.Empty;
@@ -205,7 +206,125 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                 return;
             }
             
-            string localFolder = DeployLocalFolderTextBox.Text;
+            string pullcodescript = DeployPullScriptTextBox.Text;
+            if (String.IsNullOrEmpty(pullcodescript))
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Inserisci uno script valido";
+                }
+                
+                MessageBox.Show("Inserisci uno script valido");
+                return;
+            }
+            #endregion
+
+            DeployButtonComputing.Text = "Pull code avviato!";
+            eventTextBox.Text += "Pull code avviato..." + Environment.NewLine;
+            DeployPasswordTextBox.Text = "";
+            
+            DeployProduction deployer = new DeployProduction(
+                serverIp, 
+                serverPort, 
+                serverUsername, 
+                serverPassword, 
+                "", 
+                pullcodescript,
+                pyFileHasherTextBox?.Text
+            )
+            {
+                DeployButtonComputing = DeployButtonComputing,
+                EventTextBox = eventTextBox
+            };
+            
+            new System.Threading.Timer((cb) => {
+                deployer.PullCode();
+            }, null, 2000, Timeout.Infinite);
+        }
+        
+        private void DeployFilesProduction_Click(object sender, EventArgs e)
+        {
+            SaveDeploySettings();
+            if (DeployButtonComputing != null && DeployButtonComputing.Text != null) DeployButtonComputing.Text = String.Empty;
+            if (eventTextBox != null && eventTextBox.Text != null) eventTextBox.Text = String.Empty;
+            
+            #region ValidatingFields
+            // validating fields
+            string serverIp = DeployIpTextBox?.Text;
+            if (String.IsNullOrEmpty(serverIp))
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Aggiungi un Server IP valido";
+                }
+                
+                MessageBox.Show("Aggiungi un Server IP valido");
+                return;
+            }
+
+            int serverPort = 0;
+            try
+            {
+                serverPort = Int32.Parse(DeployIpPortTextBox.Text);
+                if (serverPort <= 0)
+                {
+                    if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                    if (eventTextBox != null)
+                    {
+                        eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                        eventTextBox.Text += "Aggiungi una Server Port valida";
+                    }
+                    
+                    MessageBox.Show("Aggiungi una Server Port valida");
+                    return;
+                }
+            }
+            catch
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Server Port: Inserire un valore intero valido";
+                }
+                
+                MessageBox.Show("Server Port: Inserire un valore intero valido");
+                return;
+            }
+
+            string serverUsername = DeployUsernameTextBox.Text;
+            if (String.IsNullOrEmpty(serverUsername))
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Aggiungi un Server Username valido";
+                }
+                
+                MessageBox.Show("Aggiungi un Server Username valido");
+                return;
+            }
+
+            string serverPassword = DeployPasswordTextBox.Text;
+            if (String.IsNullOrEmpty(serverPassword))
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Aggiungi una Server Password valida";
+                }
+                
+                MessageBox.Show("Aggiungi una Server Password valida");
+                return;
+            }
+            
+            string localFolder = BackupTextBox.Text;
             if (String.IsNullOrEmpty(localFolder))
             {
                 if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
@@ -218,18 +337,33 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                 MessageBox.Show("Aggiungi una cartella locale valida");
                 return;
             }
+            
+            string deployfilesscript = DeployFilesScriptTextBox.Text;
+            if (String.IsNullOrEmpty(deployfilesscript))
+            {
+                if (DeployButtonComputing != null) DeployButtonComputing.Text += "Errore!";
+                if (eventTextBox != null)
+                {
+                    eventTextBox.Text += "Errore nella connessione al server remoto:" + Environment.NewLine;
+                    eventTextBox.Text += "Inserisci uno script valido";
+                }
+                
+                MessageBox.Show("Inserisci uno script valido");
+                return;
+            }
             #endregion
 
             DeployButtonComputing.Text = "Deploy avviato!";
             eventTextBox.Text += "Deploy avviato, creo i packages..." + Environment.NewLine;
+            DeployPasswordTextBox.Text = "";
             
             DeployProduction deployer = new DeployProduction(
-                serverIp, 
+                serverIp,
                 serverPort, 
                 serverUsername, 
                 serverPassword, 
                 localFolder, 
-                DeployRemoteScriptTextBox.Text,
+                deployfilesscript,
                 pyFileHasherTextBox?.Text
             )
             {
@@ -237,7 +371,9 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                 EventTextBox = eventTextBox
             };
             
-            deployer.Deploy();
+            new System.Threading.Timer((cb) => {
+                deployer.Deploy();
+            }, null, 2000, Timeout.Infinite);
         }
         #endregion
 
@@ -669,8 +805,8 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             AddUpdateAppSettings("DeployIpTextBox.Text", DeployIpTextBox.Text);
             AddUpdateAppSettings("DeployIpPortTextBox.Text", DeployIpPortTextBox.Text);
             AddUpdateAppSettings("DeployUsernameTextBox.Text", DeployUsernameTextBox.Text);
-            AddUpdateAppSettings("DeployLocalFolderTextBox.Text", DeployLocalFolderTextBox.Text);
-            AddUpdateAppSettings("DeployRemoteScriptTextBox.Text", DeployRemoteScriptTextBox.Text);
+            AddUpdateAppSettings("DeployPullScriptTextBox.Text", DeployPullScriptTextBox.Text);
+            AddUpdateAppSettings("DeployFilesScriptTextBox.Text", DeployFilesScriptTextBox.Text);
         }
         
         private bool CheckAllInputFolder()
@@ -811,11 +947,11 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                             case "DeployUsernameTextBox.Text":
                                 DeployUsernameTextBox.Text = appSettings[key];
                                 break;
-                            case "DeployLocalFolderTextBox.Text":
-                                DeployLocalFolderTextBox.Text = appSettings[key];
+                            case "DeployPullScriptTextBox.Text":
+                                DeployPullScriptTextBox.Text = appSettings[key];
                                 break;
-                            case "DeployRemoteScriptTextBox.Text":
-                                DeployRemoteScriptTextBox.Text = appSettings[key];
+                            case "DeployFilesScriptTextBox.Text":
+                                DeployFilesScriptTextBox.Text = appSettings[key];
                                 break;
                             case "BackupTextBox.Text":
                                 BackupTextBox.Text = appSettings[key];

@@ -41,6 +41,38 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.Classes
             PyFileHasherFolder = pyFileHasherFolder;
         }
 
+        public void PullCode()
+        {
+            try
+            {
+                if (RemoteScript.Length > 0)
+                {
+                    ComputingMessage("Lancio comando server fine deploy");
+                    EventMessage($"Eseguo comando nel server remoto: {RemoteScript}");
+
+                    SshClient sshClient = new SshClient(ServerIp, ServerPort, ServerUsername, ServerPassword);
+                    sshClient.Connect();
+                    SshCommand command = sshClient.CreateCommand(RemoteScript);
+                    command.Execute();
+                        
+                    string result = command.Result;
+                    if (result.Length == 0) result = "OK";
+                    EventMessage($"Risultato comando: {result}");
+                }
+                else
+                {
+                    EventMessage($"Nessuno script di fine deploy specificato");
+                }
+            }
+            catch (Exception connectionException)
+            {
+                Error(connectionException.Message);
+            }
+                
+            EventMessage("Pull code avviato!");
+            ComputingMessage("Pull code avviato!");
+        }
+        
         public void Deploy()
         {
             try
@@ -89,8 +121,8 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.Classes
             
             if (directories.Count <= 0)
             {
-                Error($"Non ci sono file da caricare nella cartella locale sceltam, skipping");
-                return true;
+                Error($"Non ci sono file da caricare nella cartella locale scelta, skipping");
+                return false;
             }
 
             // Creating folder to compress
@@ -109,8 +141,11 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.Classes
             Directory.CreateDirectory(destinationFolder);
             
             // Moving zip files inside the final folder
-            File.Move(Path.Combine(LocalFolder, "server.zip"), Path.Combine(destinationFolder, "server.zip"));
-            File.Move(Path.Combine(LocalFolder, "client.zip"), Path.Combine(destinationFolder, "client.zip"));
+            if(File.Exists(Path.Combine(LocalFolder, "server.zip")))
+                File.Move(Path.Combine(LocalFolder, "server.zip"), Path.Combine(destinationFolder, "server.zip"));
+            
+            if(File.Exists(Path.Combine(LocalFolder, "client.zip")))
+                File.Move(Path.Combine(LocalFolder, "client.zip"), Path.Combine(destinationFolder, "client.zip"));
         
             // Compressing folder
             ZipFile.CreateFromDirectory(destinationFolder, destinationFolder + ".zip");

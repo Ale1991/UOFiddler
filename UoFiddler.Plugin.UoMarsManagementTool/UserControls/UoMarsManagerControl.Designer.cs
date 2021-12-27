@@ -348,7 +348,7 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             BackupLabel.Name = "BackupLabel";
             BackupLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
             BackupLabel.TabIndex = 18;
-            BackupLabel.Text = "Backup Folder";
+            BackupLabel.Text = "Online server folder";
             
             BackupTextBox.Location = new System.Drawing.Point(inputX, currentY);
             BackupTextBox.Name = "BackupTextBox";
@@ -433,13 +433,13 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             DeployUsernameTextBox = new System.Windows.Forms.TextBox();
             DeployPasswordLabel = new System.Windows.Forms.Label();
             DeployPasswordTextBox = new System.Windows.Forms.TextBox();
-            DeployLocalFolderLabel = new System.Windows.Forms.Label();
-            DeployLocalFolderTextBox = new System.Windows.Forms.TextBox();
-            DeployLocalFolderBtn = new System.Windows.Forms.Button();
+            DeployPullScriptLabel = new System.Windows.Forms.Label();
+            DeployPullScriptTextBox = new System.Windows.Forms.TextBox();
             DeployLocalFolderBrowserDialog = new FolderBrowserDialog();
-            DeployRemoteScriptLabel = new System.Windows.Forms.Label();
-            DeployRemoteScriptTextBox = new System.Windows.Forms.TextBox();
+            DeployFilesScriptLabel = new System.Windows.Forms.Label();
+            DeployFilesScriptTextBox = new System.Windows.Forms.TextBox();
 
+            DeployButtonPullCode = new System.Windows.Forms.Button();
             DeployButton = new System.Windows.Forms.Button();
             DeployButtonComputing = new System.Windows.Forms.Label();
             #endregion
@@ -526,25 +526,35 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             DeployPasswordTextBox.UseSystemPasswordChar = true;
             DeployPasswordTextBox.PasswordChar = '-';
             #endregion
-
+            
             currentY += 30;
             
+            #region pullcodeProd
+            DeployButtonPullCode.Location = new System.Drawing.Point(labelX, currentY);
+            DeployButtonPullCode.Name = "DeployButtonPullCode";
+            DeployButtonPullCode.Size = new System.Drawing.Size(100, 20);
+            DeployButtonPullCode.TabIndex = 12;
+            DeployButtonPullCode.Text = "Pull code";
+            DeployButtonPullCode.UseVisualStyleBackColor = true;
+            DeployButtonPullCode.Click += new System.EventHandler(DeployPullCodeProduction_Click);
+            #endregion
+
             #region deployButton
-            DeployButton.Location = new System.Drawing.Point(labelX, currentY);
+            DeployButton.Location = new System.Drawing.Point(labelX+110, currentY);
             DeployButton.Name = "DeployButton";
             DeployButton.Size = new System.Drawing.Size(100, 20);
             DeployButton.TabIndex = 12;
-            DeployButton.Text = "Deploy";
+            DeployButton.Text = "Deploy files";
             DeployButton.UseVisualStyleBackColor = true;
-            DeployButton.Click += new System.EventHandler(DeployProduction_Click);
+            DeployButton.Click += new System.EventHandler(DeployFilesProduction_Click);
             
             // ComputingTextBox
             DeployButtonComputing.AutoSize = true;
-            DeployButtonComputing.Location = new System.Drawing.Point(inputX, currentY+labelYModifier);
+            DeployButtonComputing.Location = new System.Drawing.Point(inputX+90, currentY+labelYModifier);
             DeployButtonComputing.Name = "DeployButtonComputing";
             DeployButtonComputing.Size = new System.Drawing.Size(inputWidth, inputHeight);
             DeployButtonComputing.TabIndex = 18;
-            DeployButtonComputing.Text = "";
+            DeployButtonComputing.Text = "asdasd";
             #endregion
 
             labelX += 350;
@@ -554,42 +564,34 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             int buttonWidth = 30;
             int buttonHeight = 20;
             
-            #region Local Folder
-            DeployLocalFolderLabel.AutoSize = true;
-            DeployLocalFolderLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier-60);
-            DeployLocalFolderLabel.Name = "DeployLocalFolderLabel";
-            DeployLocalFolderLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
-            DeployLocalFolderLabel.TabIndex = 21;
-            DeployLocalFolderLabel.Text = "Cartella locale da caricare";
+            #region Deploy pull code Script
+            DeployPullScriptLabel.AutoSize = true;
+            DeployPullScriptLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier-60);
+            DeployPullScriptLabel.Name = "DeployPullScriptLabel";
+            DeployPullScriptLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
+            DeployPullScriptLabel.TabIndex = 21;
+            DeployPullScriptLabel.Text = "Comando server pull code";
             
-            DeployLocalFolderTextBox.Location = new System.Drawing.Point(inputX+10, currentY-60);
-            DeployLocalFolderTextBox.Name = "DeployLocalFolderTextBox";
-            DeployLocalFolderTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
-            DeployLocalFolderTextBox.TabIndex = 22;
-            
-            DeployLocalFolderBtn.Location = new System.Drawing.Point(buttonX+30, currentY-60);
-            DeployLocalFolderBtn.Name = "DeployLocalFolderBtn";
-            DeployLocalFolderBtn.Size = new System.Drawing.Size(buttonWidth, buttonHeight);
-            DeployLocalFolderBtn.TabIndex = 23;
-            DeployLocalFolderBtn.Text = "...";
-            DeployLocalFolderBtn.UseVisualStyleBackColor = true;
-            DeployLocalFolderBtn.Click += new System.EventHandler(SelectLocalFolderBtn_Click);
+            DeployPullScriptTextBox.Location = new System.Drawing.Point(inputX+10, currentY-60);
+            DeployPullScriptTextBox.Name = "DeployPullScriptTextBox";
+            DeployPullScriptTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
+            DeployPullScriptTextBox.TabIndex = 22;
             #endregion
 
-            #region Remote Script
-            DeployRemoteScriptLabel.AutoSize = true;
-            DeployRemoteScriptLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier-30);
-            DeployRemoteScriptLabel.Name = "DeployRemoteScriptLabel";
-            DeployRemoteScriptLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
-            DeployRemoteScriptLabel.TabIndex = 21;
-            DeployRemoteScriptLabel.Text = "Comando server fine deploy";
+            #region Deploy files Script
+            DeployFilesScriptLabel.AutoSize = true;
+            DeployFilesScriptLabel.Location = new System.Drawing.Point(labelX, currentY+labelYModifier-30);
+            DeployFilesScriptLabel.Name = "DeployFilesScriptLabel";
+            DeployFilesScriptLabel.Size = new System.Drawing.Size(labelWidth, labelHeight);
+            DeployFilesScriptLabel.TabIndex = 21;
+            DeployFilesScriptLabel.Text = "Comando server import files";
             
-            DeployRemoteScriptTextBox.Location = new System.Drawing.Point(inputX+10, currentY-30);
-            DeployRemoteScriptTextBox.Name = "DeployRemoteScriptTextBox";
-            DeployRemoteScriptTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
-            DeployRemoteScriptTextBox.TabIndex = 22;
+            DeployFilesScriptTextBox.Location = new System.Drawing.Point(inputX+10, currentY-30);
+            DeployFilesScriptTextBox.Name = "DeployFilesScriptTextBox";
+            DeployFilesScriptTextBox.Size = new System.Drawing.Size(inputWidth, inputHeight);
+            DeployFilesScriptTextBox.TabIndex = 22;
             #endregion
-            
+
             return currentY;
         }
         private void DrawDeploy()
@@ -603,12 +605,12 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
             Controls.Add(DeployUsernameTextBox);
             Controls.Add(DeployPasswordLabel);
             Controls.Add(DeployPasswordTextBox);
-            Controls.Add(DeployLocalFolderLabel);
-            Controls.Add(DeployLocalFolderTextBox);
-            Controls.Add(DeployLocalFolderBtn);
-            Controls.Add(DeployRemoteScriptLabel);
-            Controls.Add(DeployRemoteScriptTextBox);
+            Controls.Add(DeployPullScriptLabel);
+            Controls.Add(DeployPullScriptTextBox);
+            Controls.Add(DeployFilesScriptLabel);
+            Controls.Add(DeployFilesScriptTextBox);
             
+            Controls.Add(DeployButtonPullCode);
             Controls.Add(DeployButton);
             Controls.Add(DeployButtonComputing);
         }
@@ -665,13 +667,13 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
         private System.Windows.Forms.TextBox DeployUsernameTextBox;
         private System.Windows.Forms.Label DeployPasswordLabel;
         private System.Windows.Forms.TextBox DeployPasswordTextBox;
-        private System.Windows.Forms.Label DeployLocalFolderLabel;
-        private System.Windows.Forms.TextBox DeployLocalFolderTextBox;
-        private System.Windows.Forms.Button DeployLocalFolderBtn;
+        private System.Windows.Forms.Label DeployPullScriptLabel;
+        private System.Windows.Forms.TextBox DeployPullScriptTextBox;
         private System.Windows.Forms.FolderBrowserDialog DeployLocalFolderBrowserDialog;
-        private System.Windows.Forms.Label DeployRemoteScriptLabel;
-        private System.Windows.Forms.TextBox DeployRemoteScriptTextBox;
+        private System.Windows.Forms.Label DeployFilesScriptLabel;
+        private System.Windows.Forms.TextBox DeployFilesScriptTextBox;
         
+        private System.Windows.Forms.Button DeployButtonPullCode;
         private System.Windows.Forms.Button DeployButton;
         private System.Windows.Forms.Label DeployButtonComputing;
     }
