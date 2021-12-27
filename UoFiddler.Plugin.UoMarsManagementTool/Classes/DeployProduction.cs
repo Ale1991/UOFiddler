@@ -162,9 +162,12 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.Classes
             }
 
             // Cleaning up
-            Directory.Delete(destinationFolder, true);
-            Directory.Delete(Path.Combine(LocalFolder, "server"), true);
-            Directory.Delete(Path.Combine(LocalFolder, "client"), true);
+            if(Directory.Exists(destinationFolder))
+                Directory.Delete(destinationFolder, true);
+            if(Directory.Exists(Path.Combine(LocalFolder, "client")))
+                Directory.Delete(Path.Combine(LocalFolder, "client"), true);
+            if(Directory.Exists(Path.Combine(LocalFolder, "client")))
+                Directory.Delete(Path.Combine(LocalFolder, "client"), true);
             
             return true;
         }
