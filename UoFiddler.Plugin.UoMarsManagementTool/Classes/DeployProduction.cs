@@ -135,6 +135,10 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.Classes
             // zipping client folder
             if(Directory.Exists(Path.Combine(LocalFolder, "client")))
                 ZipFile.CreateFromDirectory(Path.Combine(LocalFolder, "client"), Path.Combine(LocalFolder, "client.zip"));
+            
+            // zipping map folder
+            if(Directory.Exists(Path.Combine(LocalFolder, "map")))
+                ZipFile.CreateFromDirectory(Path.Combine(LocalFolder, "map"), Path.Combine(LocalFolder, "map.zip"));
 
             // Creating final folder
             string destinationFolder = Path.Combine(LocalFolder, "deploy_latest");
@@ -146,6 +150,9 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.Classes
             
             if(File.Exists(Path.Combine(LocalFolder, "client.zip")))
                 File.Move(Path.Combine(LocalFolder, "client.zip"), Path.Combine(destinationFolder, "client.zip"));
+            
+            if(File.Exists(Path.Combine(LocalFolder, "map.zip")))
+                File.Move(Path.Combine(LocalFolder, "map.zip"), Path.Combine(destinationFolder, "map.zip"));
         
             // Compressing folder
             ZipFile.CreateFromDirectory(destinationFolder, destinationFolder + ".zip");
@@ -168,6 +175,8 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.Classes
                 Directory.Delete(Path.Combine(LocalFolder, "client"), true);
             if(Directory.Exists(Path.Combine(LocalFolder, "server")))
                 Directory.Delete(Path.Combine(LocalFolder, "server"), true);
+            if(Directory.Exists(Path.Combine(LocalFolder, "map")))
+                Directory.Delete(Path.Combine(LocalFolder, "map"), true);
             
             return true;
         }
