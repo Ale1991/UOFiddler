@@ -44,7 +44,7 @@ namespace UoFiddler.Plugin.UoMarsManagementTool.UserControls
                 eventTextBox.Text = String.Empty;
 
             CloseAllProcess();
-            ClearBackupFolder();
+            //ClearBackupFolder();
 
             if (CheckAllInputFolder())
                 PackMulToUopForUoMarsClientFileFolder();
